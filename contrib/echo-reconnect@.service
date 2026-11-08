@@ -1,0 +1,13 @@
+# systemd user unit. The instance name is the Echo address with dashes:
+#   cp echo-reconnect.sh ~/.local/bin/ && cp echo-reconnect@.service ~/.config/systemd/user/
+#   systemctl --user enable --now echo-reconnect@AA-BB-CC-DD-EE-FF
+# Undo: systemctl --user disable --now echo-reconnect@AA-BB-CC-DD-EE-FF
+[Unit]
+Description=Keep the Amazon Echo %i connected over Bluetooth
+
+[Service]
+ExecStart=/bin/sh -c 'exec %h/.local/bin/echo-reconnect.sh "$(echo %i | tr - :)"'
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
